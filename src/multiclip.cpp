@@ -109,19 +109,20 @@ int main (int argc, char *argv[ ])
     groupSock.sin_addr.s_addr = inet_addr("226.0.0.1");
     groupSock.sin_port = htons(4321);
  
-    /* Disable loopback so you do not receive your own datagrams.
-    {
-    char loopch = 0;
-    if(setsockopt(sd, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loopch, sizeof(loopch)) < 0)
-    {
-    perror("Setting IP_MULTICAST_LOOP error");
-    close(sd);
-    exit(1);
-    }
-    else
-    printf("Disabling the loopback...OK.\n");
-    }
-    */
+    // Disable loopback so you do not receive your own datagrams.
+//    {
+//        char loopch = 0;
+//        if(setsockopt(sd, IPPROTO_IP, IP_MULTICAST_LOOP, (char *)&loopch, sizeof(loopch)) < 0)
+//        {
+//            perror("Setting IP_MULTICAST_LOOP error");
+//            close(sd);
+//            exit(1);
+//        }
+//        else{
+//            printf("Disabling the loopback...OK.\n");
+//        } 
+//    }
+
 
 
     /* Set local interface for outbound multicast datagrams. */
@@ -161,30 +162,36 @@ int main (int argc, char *argv[ ])
         datalen = strlen( databuf );
         if(setsockopt(sd, IPPROTO_IP, IP_MULTICAST_IF, (char *)&localInterface, sizeof(localInterface)) < 0)
         {
-          perror("Setting local interface error");
-          exit(1);
+            perror("Setting local interface error");
+            exit(1);
         }
         else
-          printf("Setting the local interface...OK\n");
+        {
+            printf("Setting the local interface...OK\n");
+        }
         /* Send a message to the multicast group specified by the*/
         /* groupSock sockaddr structure. */
         /*int datalen = 1024;*/
         if(sendto(sd, databuf, datalen, 0, (struct sockaddr*)&groupSock, sizeof(groupSock)) < 0)
-        {perror("Sending datagram message error");}
+        {
+            perror("Sending datagram message error");
+        }
         else
-          printf("Sending datagram message...OK\n");
+        {
+            printf("Sending datagram message...OK\n");
+        }
 
         /* Try the re-read from the socket if the loopback is not disable
         if(read(sd, databuf, datalen) < 0)
         {
-        perror("Reading datagram message error\n");
-        close(sd);
-        exit(1);
+            perror("Reading datagram message error\n");
+            close(sd);
+            exit(1);
         }
         else
         {
-        printf("Reading datagram message from client...OK\n");
-        printf("The message is: %s\n", databuf);
+            printf("Reading datagram message from client...OK\n");
+            printf("The message is: %s\n", databuf);
         }
         */
         my_sleep(1000);
